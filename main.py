@@ -7,6 +7,7 @@ link = input("Digite o link do vídeo que você quer baixar: ")
 path = input("Digite o a pasta que o vídeo deverá ser salvo: ")
 yt = YouTube(link)
 mode = str(input("Você quer baixar em .mp3, ou .mp4 (Digite mp3, ou mp4)? "))
+cont = "n"
 
 
 def BaixarVideo(link, pasta):
@@ -20,6 +21,7 @@ def BaixarVideo(link, pasta):
     print("Baixando...")
     ys.download(path)
     print("Finalizado com sucesso!")
+    Iniciar(cont="s")
 
 
 def BaixarAudio(link, pasta):
@@ -35,10 +37,22 @@ def BaixarAudio(link, pasta):
             new_file.write_audiofile(mp3_path)
             os.remove(mp4_path)
     print("Conversão Concluída!")
+    Iniciar(cont="n")
 
+def Iniciar(cont):
+    if cont == "s":
+        if mode == "mp4":
+            BaixarVideo(yt, path)
 
-if mode == "mp4":
-    BaixarVideo(yt, path)
+        if mode == "mp3":
+            BaixarAudio(yt, path)
+    else:
+        cont = input("Você quer continuar ? (Digite s ou n)")
+        if cont == "s":
+            if mode == "mp4":
+                BaixarVideo(yt, path)
 
-if mode == "mp3":
-    BaixarAudio(yt, path)
+            if mode == "mp3":
+                BaixarAudio(yt, path)
+
+Iniciar(cont="s")
