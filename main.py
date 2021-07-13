@@ -3,30 +3,35 @@ import moviepy.editor as mp
 import re
 import os
 
-link = input("Digite o link do vídeo que você quer baixar: ")
-path = input("Digite o a pasta que o vídeo deverá ser salvo: ")
-yt = YouTube(link)
-mode = str(input("Você quer baixar em .mp3, ou .mp4 (Digite mp3, ou mp4)? "))
-cont = "n"
+def Setup():
+    link = input("Digite o link do vídeo que você quer baixar: ")
+    path = input("Digite o a pasta que o vídeo deverá ser salvo: ")
+    yt = YouTube(link)
+    mode = str(input("Você quer baixar em .mp3, ou .mp4 (Digite mp3, ou mp4)? "))
+    if mode == "mp4":
+        BaixarVideo(yt, path)
+
+    elif mode == "mp3":
+        BaixarAudio(yt, path)
 
 
 def BaixarVideo(link, pasta):
     print("Tìtulo: ", link.title)
     print("Número de Views: ", link.views)
     print("Duração do vídeo: ", link.length, " segundos.")
-    print("Avaliação do vídeo: ", link.rating)
+    print("Autor do vídeo: ", link.author)
 
     ys = link.streams.get_highest_resolution()
 
     print("Baixando...")
-    ys.download(path)
+    ys.download(pasta)
     print("Finalizado com sucesso!")
-    Iniciar(cont="s")
+    Iniciar(cont="n")
 
 
 def BaixarAudio(link, pasta):
     print("Baixando...")
-    ys = yt.streams.filter(only_audio=True).first().download(pasta)
+    ys = link.streams.filter(only_audio=True).first().download(pasta)
     print("Download Completo!")
     print("Convertendo arquivo...")
     for file in os.listdir(pasta):
@@ -40,19 +45,10 @@ def BaixarAudio(link, pasta):
     Iniciar(cont="n")
 
 def Iniciar(cont):
-    if cont == "s":
-        if mode == "mp4":
-            BaixarVideo(yt, path)
-
-        if mode == "mp3":
-            BaixarAudio(yt, path)
-    else:
+    if cont == "n":
         cont = input("Você quer continuar ? (Digite s ou n)")
         if cont == "s":
-            if mode == "mp4":
-                BaixarVideo(yt, path)
+            Setup()
 
-            if mode == "mp3":
-                BaixarAudio(yt, path)
-
-Iniciar(cont="s")
+cont = "s"
+Setup()
